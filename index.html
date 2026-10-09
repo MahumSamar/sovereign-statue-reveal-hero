@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovereign — Command the Digital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Noto+Serif+Display:wdth,wght@62.5,500;62.5,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #8f9aab;
+    --ink: #121316;
+    --ink-soft: #24262b;
+    --paper: #f4f4f2;
+    --glass: rgba(255, 255, 255, 0.5);
+    --pad: clamp(20px, 4.9vw, 84px);
+    --display: "Noto Serif Display", "Bodoni MT Condensed", "Times New Roman", serif;
+    --body: "Inter", "Helvetica Neue", Arial, sans-serif;
+    --ratio: 1.7684; /* artwork aspect, 2688 / 1520 */
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: var(--body);
+    color: var(--ink);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+
+  /* ---------- Hero shell ---------- */
+  .hero {
+    position: relative;
+    height: 100vh;
+    height: 100svh;
+    min-height: 560px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #95a0b0 0%, #8b96a8 100%);
+    isolation: isolate;
+  }
+
+  /* ---------- Artwork (front image, reveal canvas, glass panels) ---------- */
+  .art {
+    position: absolute;
+    top: 0;
+    right: -2.5vw;
+    width: max(105vw, calc(105vh * var(--ratio)));
+    aspect-ratio: 2688 / 1520;
+    z-index: 0;
+  }
+  .art img,
+  .art canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .art img { object-fit: cover; }
+  .art canvas { pointer-events: none; }
+
+  .glass {
+    position: absolute;
+    left: 59.4%;
+    top: 9.6%;
+    width: 33.4%;
+    height: 59%;
+    display: grid;
+    grid-template-columns: 20.5fr 18.6fr 9.6fr 9.2fr 25.2fr 16.9fr;
+    pointer-events: none;
+  }
+  .glass i {
+    border: 1px solid var(--glass);
+    margin-left: -1px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0) 40%);
+    -webkit-backdrop-filter: brightness(1.05) saturate(1.08);
+    backdrop-filter: brightness(1.05) saturate(1.08);
+  }
+  .glass i:nth-child(1), .glass i:nth-child(6) { margin-top: 0.4%; }
+  .glass i:nth-child(3) {
+    background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.02));
+  }
+  .glass i:nth-child(4) {
+    background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.28) 11%, rgba(255,255,255,0.03) 12%, rgba(255,255,255,0) 100%);
+    -webkit-backdrop-filter: brightness(1.12) blur(1px);
+    backdrop-filter: brightness(1.12) blur(1px);
+  }
+
+  /* ---------- Content ---------- */
+  .content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    padding: 0 var(--pad);
+    pointer-events: none;
+  }
+  .content a { pointer-events: auto; }
+
+  .nav {
+    position: absolute;
+    top: clamp(22px, 5.2vh, 48px);
+    left: calc(var(--pad) - 10px);
+    display: flex;
+    gap: clamp(14px, 1.75vw, 30px);
+    font-size: clamp(13px, 1.23vw, 17px);
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+  .nav a {
+    padding: 6px 10px 9px;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.25s ease;
+  }
+  .nav a:hover,
+  .nav a[aria-current="page"] { border-bottom-color: var(--ink); }
+
+  .lede {
+    position: absolute;
+    top: 20.5vh;
+    left: var(--pad);
+  }
+  h1 {
+    font-family: var(--display);
+    font-stretch: 62.5%;
+    font-weight: 600;
+    font-size: clamp(38px, 4.3vw, 80px);
+    line-height: 1.24;
+    letter-spacing: -0.005em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    /* the reference face is narrower than any webfont width axis goes */
+    transform: scaleX(0.7);
+    transform-origin: left center;
+  }
+  h1 span { display: block; }
+  h1 .dash::before {
+    content: "";
+    display: inline-block;
+    width: 0.78em;
+    height: 1px;
+    background: currentColor;
+    vertical-align: 0.2em;
+    margin-right: 0.3em;
+    box-shadow: 0 0.5px 0 currentColor;
+  }
+  .lede p {
+    margin-top: clamp(8px, 1.1vh, 14px);
+    max-width: 21em;
+    font-size: clamp(15px, 1.5vw, 23px);
+    font-weight: 300;
+    line-height: 1.38;
+    color: var(--ink-soft);
+  }
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: clamp(22px, 2.8vw, 44px);
+    margin-top: clamp(22px, 4.1vh, 40px);
+    font-size: clamp(13px, 1.27vw, 18px);
+  }
+  .btn {
+    background: #1b1b1d;
+    color: var(--paper);
+    padding: 0.52em 0.92em 0.56em;
+    transition: background 0.25s ease;
+  }
+  .btn:hover { background: #000; }
+  .link { display: inline-flex; align-items: center; gap: 0.55em; color: var(--ink-soft); }
+  .link svg { width: 1.15em; height: 1em; transition: transform 0.25s ease; }
+  .link:hover svg { transform: translateX(4px); }
+
+  .cards {
+    position: absolute;
+    left: var(--pad);
+    bottom: clamp(18px, 4.6vh, 44px);
+    display: flex;
+    gap: clamp(8px, 1.05vw, 16px);
+    height: clamp(104px, 22.4vh, 230px);
+    list-style: none;
+  }
+  .cards li { height: 100%; }
+  .cards li:nth-child(1) { aspect-ratio: 137 / 155; }
+  .cards li:nth-child(2) { aspect-ratio: 1 / 1; }
+  .cards li:nth-child(3) { aspect-ratio: 120 / 155; }
+  .card {
+    position: relative;
+    display: block;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 3px;
+    color: #fff;
+  }
+  .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .card:hover img { transform: scale(1.05); }
+  .card::after {
+    content: "";
+    position: absolute;
+    inset: 40% 0 0 0;
+    background: linear-gradient(180deg, rgba(20,20,26,0), rgba(20,20,26,0.38));
+  }
+  .card span {
+    position: absolute;
+    z-index: 1;
+    bottom: 5%;
+    font-family: var(--display);
+    font-stretch: 62.5%;
+    font-weight: 600;
+    font-size: clamp(15px, 3.3vh, 32px);
+    line-height: 1.05;
+    text-transform: uppercase;
+    white-space: nowrap;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.35);
+    transform: scaleX(0.72);
+  }
+  .cards li:nth-child(1) span { right: 8%; text-align: right; transform-origin: right center; }
+  .cards li:nth-child(2) span { left: 0; right: 0; text-align: center; }
+  .cards li:nth-child(3) span { left: 9%; text-align: left; transform-origin: left center; }
+
+  /* ---------- Custom cursor (fine pointers only) ---------- */
+  .cursor {
+    position: fixed;
+    left: 0; top: 0;
+    width: 34px; height: 34px;
+    margin: -17px 0 0 -17px;
+    border: 1px solid rgba(18,19,22,0.75);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .cursor::after {
+    content: "";
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 4px; height: 4px;
+    margin: -2px 0 0 -2px;
+    border-radius: 50%;
+    background: rgba(18,19,22,0.85);
+  }
+  .cursor.on { opacity: 1; }
+  @media (hover: none), (pointer: coarse) { .cursor { display: none; } }
+
+  /* ---------- Tablet ---------- */
+  @media (max-width: 1024px) and (min-width: 761px) and (min-aspect-ratio: 5/4) {
+    .art { right: -9vw; }
+  }
+
+  /* ---------- Mobile + portrait / squarish viewports: copy on top, statue below ---------- */
+  @media (max-width: 760px), (max-aspect-ratio: 5/4) {
+    .hero { min-height: 640px; }
+    .art {
+      top: auto;
+      bottom: 0;
+      right: auto;
+      /* head sits at 76.5% of the artwork width: centre it in the viewport */
+      width: min(215vw, calc(62vh * var(--ratio)));
+      left: 50%;
+      transform: translateX(-76.5%);
+      /* feather the top and side edges of the artwork into the page colour */
+      -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 7%), linear-gradient(90deg, transparent 40%, #000 56%, #000 95.5%, transparent 100%);
+      -webkit-mask-composite: source-in;
+      mask-image: linear-gradient(180deg, transparent 0%, #000 7%), linear-gradient(90deg, transparent 40%, #000 56%, #000 95.5%, transparent 100%);
+      mask-composite: intersect;
+    }
+    .nav { top: 16px; gap: 6px; font-size: 14px; }
+    .lede { top: 74px; right: var(--pad); }
+    h1 { font-size: clamp(30px, 10.2vw, 60px); line-height: 1.16; }
+    .lede p { font-size: clamp(15px, 2.2vw, 19px); max-width: 21em; }
+    .actions { margin-top: 18px; font-size: 14px; gap: 22px; }
+    .cards {
+      right: var(--pad);
+      bottom: 16px;
+      height: clamp(92px, 27vw, 170px);
+      gap: 8px;
+      max-width: 560px;
+    }
+    .cards li { flex: 1 1 0; aspect-ratio: auto !important; min-width: 0; }
+    .card span { font-size: clamp(15px, 4.8vw, 21px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero" id="hero">
+
+  <div class="art" id="art" aria-hidden="true">
+    <img id="front" alt="" decoding="async"
+         src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261008_121942_6a31afdf-dc41-40e5-9d1a-eadbcf6ad8e4.png">
+    <canvas id="reveal"></canvas>
+    <div class="glass"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
+
+  <div class="content">
+    <nav class="nav" aria-label="Primary">
+      <a href="#work" aria-current="page">Work</a>
+      <a href="#process">Process</a>
+      <a href="#journal">Journal</a>
+      <a href="#studio">Studio</a>
+    </nav>
+
+    <div class="lede">
+      <h1>
+        <span>Command the digital</span>
+        <span class="dash">Unstoppable, sovereign</span>
+      </h1>
+      <p>AI-driven creativity and precision-crafted design for forward-thinking brands.</p>
+      <div class="actions">
+        <a class="btn" href="#call">Book A Call</a>
+        <a class="link" href="#work">See Work
+          <svg viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M0 6h16.5M12 1.5 16.5 6 12 10.5"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <ul class="cards">
+      <li><a class="card" href="#ai">
+        <img alt="Cosmic-marble Greek helmet"
+             src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261008_121943_ddcca984-c367-4c9d-934f-e4b7fa3006b3.png">
+        <span>Creative<br>AI Solutions</span>
+      </a></li>
+      <li><a class="card" href="#brand">
+        <img alt="Cosmic-marble column capital"
+             src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261008_121943_a100859a-6154-4e91-9f89-edff15b9b6da.png">
+        <span>Digital<br>Brand Systems</span>
+      </a></li>
+      <li><a class="card" href="#scale">
+        <img alt="Statue hand holding a cosmic sphere"
+             src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261008_121942_d17d78a1-2eef-407c-a17e-9df0ca9d8cd1.png">
+        <span>Scalable<br>Innovation</span>
+      </a></li>
+    </ul>
+  </div>
+</header>
+
+<div class="cursor" id="cursor"></div>
+
+<script>
+(() => {
+  const BACK_URL = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261008_122033_7fa8ed9b-999b-43df-a1db-98aabb827976.png';
+
+  const hero = document.getElementById('hero');
+  const art = document.getElementById('art');
+  const canvas = document.getElementById('reveal');
+  const ctx = canvas.getContext('2d');
+  const cursor = document.getElementById('cursor');
+  const coarse = matchMedia('(hover: none), (pointer: coarse)').matches;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Back image is only ever drawn to the visible canvas (never read back),
+  // so it works straight from the remote URL without CORS.
+  const back = new Image();
+  let backReady = false;
+  back.onload = () => { backReady = true; };
+  back.src = BACK_URL;
+
+  // Low-res "ink" field: soft blobs are stamped along the pointer path, then
+  // thresholded against a noise map to get the torn, liquid edge.
+  const MW = 288, MH = Math.round(MW / (2688 / 1520));
+  const field = document.createElement('canvas');
+  field.width = MW; field.height = MH;
+  const fctx = field.getContext('2d', { willReadFrequently: true });
+  const mask = document.createElement('canvas');
+  mask.width = MW; mask.height = MH;
+  const mctx = mask.getContext('2d');
+  const maskData = mctx.createImageData(MW, MH);
+
+  // Tileable-enough value noise, two octaves
+  const noise = new Float32Array(MW * MH);
+  (function buildNoise() {
+    const G = 64, grid = new Float32Array(G * G);
+    for (let i = 0; i < grid.length; i++) grid[i] = Math.random();
+    const sample = (x, y) => {
+      const xi = Math.floor(x), yi = Math.floor(y);
+      let fx = x - xi, fy = y - yi;
+      fx = fx * fx * (3 - 2 * fx); fy = fy * fy * (3 - 2 * fy);
+      const g = (a, b) => grid[((b % G + G) % G) * G + ((a % G + G) % G)];
+      const top = g(xi, yi) + (g(xi + 1, yi) - g(xi, yi)) * fx;
+      const bot = g(xi, yi + 1) + (g(xi + 1, yi + 1) - g(xi, yi + 1)) * fx;
+      return top + (bot - top) * fy;
+    };
+    for (let y = 0; y < MH; y++) for (let x = 0; x < MW; x++) {
+      noise[y * MW + x] = sample(x / 26, y / 26) * 0.65 + sample(x / 9 + 17, y / 9 + 5) * 0.35;
+    }
+  })();
+
+  let W = 0, H = 0, rect = null;
+  function resize() {
+    rect = art.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    W = canvas.width = Math.max(2, Math.round(rect.width * dpr));
+    H = canvas.height = Math.max(2, Math.round(rect.height * dpr));
+  }
+  resize();
+  addEventListener('resize', resize);
+
+  const blobs = [];           // {x, y, r, born, life} in field pixels
+  const LIFE = 1500;
+  const BASE_R = MH * 0.105;
+  let last = null, running = false, lastInput = -1e9, drift = 0;
+
+  function stamp(cx, cy, now) {
+    // clientX/Y -> field space
+    const x = (cx - rect.left) / rect.width * MW;
+    const y = (cy - rect.top) / rect.height * MH;
+    if (last) {
+      const dx = x - last.x, dy = y - last.y, d = Math.hypot(dx, dy);
+      const steps = Math.min(24, Math.max(1, Math.round(d / (BASE_R * 0.35))));
+      for (let i = 1; i <= steps; i++) {
+        const t = i / steps;
+        drift += 0.9;
+        blobs.push({
+          x: last.x + dx * t + Math.sin(drift * 1.7) * BASE_R * 0.25,
+          y: last.y + dy * t + Math.cos(drift * 1.3) * BASE_R * 0.25,
+          r: BASE_R * (0.8 + 0.5 * Math.abs(Math.sin(drift * 0.6))),
+          born: now, life: LIFE * (0.75 + Math.random() * 0.5)
+        });
+      }
+    } else {
+      blobs.push({ x, y, r: BASE_R, born: now, life: LIFE });
+    }
+    last = { x, y };
+    if (blobs.length > 420) blobs.splice(0, blobs.length - 420);
+    if (!running) { running = true; requestAnimationFrame(frame); }
+  }
+
+  function frame(now) {
+    // Auto-wander over the face when there's no pointer to drive it (touch)
+    if (coarse && !reduced && now - lastInput > 2200) {
+      const t = now / 1000;
+      stamp(rect.left + rect.width * (0.765 + Math.sin(t * 0.9) * 0.11),
+            rect.top + rect.height * (0.31 + Math.sin(t * 1.37 + 1) * 0.17), now);
+    }
+
+    fctx.clearRect(0, 0, MW, MH);
+    fctx.globalCompositeOperation = 'lighter';
+    for (let i = blobs.length - 1; i >= 0; i--) {
+      const b = blobs[i], age = (now - b.born) / b.life;
+      if (age >= 1) { blobs.splice(i, 1); continue; }
+      // quick swell in, slow shrink out
+      const k = age < 0.12 ? age / 0.12 : 1 - Math.pow((age - 0.12) / 0.88, 2.2);
+      const r = b.r * (0.55 + 0.45 * k);
+      const g = fctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, r);
+      g.addColorStop(0, `rgba(255,255,255,${0.55 * k})`);
+      g.addColorStop(1, 'rgba(255,255,255,0)');
+      fctx.fillStyle = g;
+      fctx.fillRect(b.x - r, b.y - r, r * 2, r * 2);
+    }
+
+    const src = fctx.getImageData(0, 0, MW, MH).data, dst = maskData.data;
+    for (let i = 0, p = 0; i < noise.length; i++, p += 4) {
+      const v = src[p + 3] / 255;
+      let a = 0;
+      if (v > 0.02) {
+        a = (v + (noise[i] - 0.5) * 0.55 - 0.4) * 9;
+        a = a < 0 ? 0 : a > 1 ? 1 : a;
+      }
+      dst[p] = dst[p + 1] = dst[p + 2] = 255;
+      dst[p + 3] = a * 255;
+    }
+    mctx.putImageData(maskData, 0, 0);
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.clearRect(0, 0, W, H);
+    if (backReady) {
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(mask, 0, 0, W, H);
+      ctx.globalCompositeOperation = 'source-in';
+      ctx.drawImage(back, 0, 0, W, H);
+    }
+
+    if (blobs.length || (coarse && !reduced)) requestAnimationFrame(frame);
+    else { running = false; last = null; }
+  }
+
+  hero.addEventListener('pointermove', (e) => {
+    const now = performance.now();
+    lastInput = now;
+    rect = art.getBoundingClientRect();
+    stamp(e.clientX, e.clientY, now);
+    cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+    cursor.classList.add('on');
+  });
+  hero.addEventListener('pointerleave', () => { last = null; cursor.classList.remove('on'); });
+  hero.addEventListener('pointerdown', () => { last = null; });
+
+  if (coarse && !reduced) { running = true; requestAnimationFrame(frame); }
+})();
+</script>
+</body>
+</html>
